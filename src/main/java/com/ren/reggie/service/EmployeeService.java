@@ -1,7 +1,10 @@
 package com.ren.reggie.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ren.reggie.entity.Employee;
+
+import java.util.List;
 
 /**
  * @program: reggie_take_out
@@ -10,4 +13,8 @@ import com.ren.reggie.entity.Employee;
  * @description:
  **/
 public interface EmployeeService extends IService<Employee> {
+
+    List<Employee> getEmpList(Integer page, Integer pageSize);
+
+    Page<Employee> getPage(Integer page, Integer pageSize,String name);
 }

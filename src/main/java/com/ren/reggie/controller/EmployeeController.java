@@ -2,6 +2,7 @@ package com.ren.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ren.reggie.common.R;
 import com.ren.reggie.entity.Employee;
 import com.ren.reggie.service.EmployeeService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @program: reggie_take_out
@@ -131,4 +133,13 @@ public class EmployeeController {
 
         return R.success("新增员工成功");
     }
+
+    @ApiOperation("获取员工列表的分页信息")
+    @GetMapping("/page")
+    public R<Page<Employee>> query(Integer page, Integer pageSize, String name) {
+        Page<Employee> employeePage = employeeService.getPage(page, pageSize,name);
+        log.info("# page = {}, pageSize = {}, name = {}, PageTotal = {} #",page,pageSize,name,employeePage.getTotal());
+        return R.success(employeePage);
+    }
+
 }
