@@ -34,13 +34,14 @@ public class EmployeeController {
 
     /**
      * 员工登录
+     *
      * @param request
      * @param employee
      * @return
      */
     @ApiOperation("登录")
     @PostMapping("/login")
-    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee){
+    public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
         /**
          *  1，将页面提交的密码password进行md5加密处理
          *  2，根据页面提交的用户名username查询数据库
@@ -55,32 +56,32 @@ public class EmployeeController {
 
         // 2，根据页面提交的用户名username查询数据库
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Employee::getUsername,employee.getUsername());
+        queryWrapper.eq(Employee::getUsername, employee.getUsername());
         Employee emp = employeeService.getOne(queryWrapper);
 
         // 3，如果没有查询到则返回登录失败的结果
-        if (emp == null){
+        if (emp == null) {
             return R.error("登录失败");
         }
 
         // 4，密码比对，如果不一致则放回登陆失败结果
-        if (!emp.getPassword().equals(password)){
+        if (!emp.getPassword().equals(password)) {
             return R.error("登录失败");
         }
 
         // 5，查看员工状态，如果为已禁用状态，则返回员工已禁用结果
-        if (emp.getStatus() == 0){
+        if (emp.getStatus() == 0) {
             return R.error("用户已禁用");
         }
 
         // 6，登录成功，将员工id存入session，并返回登录成功结果
-        request.getSession().setAttribute("employee",emp.getId());
+        request.getSession().setAttribute("employee", emp.getId());
         return R.success(emp);
     }
 
     @ApiOperation("登出")
     @PostMapping("/logout")
-    public R<String> logout(HttpServletRequest request){
+    public R<String> logout(HttpServletRequest request) {
         // 清理session中保存的当前员工的id
         request.getSession().removeAttribute("employee");
         return R.success("退出成功");
@@ -88,12 +89,13 @@ public class EmployeeController {
 
     /**
      * 新增员工
+     *
      * @param employee
      * @return
      */
     @ApiOperation("添加员工")
     @PostMapping
-    public R<String> save(HttpServletRequest request, @RequestBody Employee employee){
+    public R<String> save(HttpServletRequest request, @RequestBody Employee employee) {
         // 设置初始密码123456，需要进行md5加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         // 设置时间
@@ -106,19 +108,20 @@ public class EmployeeController {
         // 保存到数据库
         employeeService.save(employee);
 
-        log.info("# 新增员工 员工信息 ： {} #",employee.toString());
+        log.info("# 新增员工 员工信息 ： {} #", employee.toString());
 
         return R.success("新增员工成功");
     }
 
     /**
      * 修改员工
+     *
      * @param employee
      * @return
      */
     @ApiOperation("修改员工")
     @PutMapping
-    public R<String> update(HttpServletRequest request, @RequestBody Employee employee){
+    public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
         // 设置时间
         employee.setUpdateTime(LocalDateTime.now());
         // 设置创建更新人
@@ -126,19 +129,28 @@ public class EmployeeController {
         employee.setUpdateUser(empId);
         // 保存到数据库
         LambdaUpdateWrapper<Employee> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(Employee::getId,employee.getId());
-        employeeService.update(employee,updateWrapper);
+        updateWrapper.eq(Employee::getId, employee.getId());
+        employeeService.update(employee, updateWrapper);
 
-        log.info("# 修改员工 员工信息 ： {} #",employee.toString());
+        log.info("# 修改员工 员工信息 ： {} #", employee.toString());
 
         return R.success("修改员工成功");
+    }
+
+    @ApiOperation("根据id获取员工信息")
+    @GetMapping("/{id}")
+    public R<Employee> queryEmp(@PathVariable String id) {
+        // 获取用户
+        Employee employee = employeeService.getById(id);
+
+        return R.success(employee);
     }
 
     @ApiOperation("获取员工列表的分页信息")
     @GetMapping("/page")
     public R<Page<Employee>> query(Integer page, Integer pageSize, String name) {
-        Page<Employee> employeePage = employeeService.getPage(page, pageSize,name);
-        log.info("# page = {}, pageSize = {}, name = {}, PageTotal = {} #",page,pageSize,name,employeePage.getTotal());
+        Page<Employee> employeePage = employeeService.getPage(page, pageSize, name);
+        log.info("# page = {}, pageSize = {}, name = {}, PageTotal = {} #", page, pageSize, name, employeePage.getTotal());
         return R.success(employeePage);
     }
 
