@@ -45,7 +45,12 @@ public class LoginCheckFilter implements Filter {
                 "/employee/login",
                 "/employee/logout",
                 "/backend/**",
-                "/front/**"
+                "/front/**",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/swagger-resources/**",
+                "/csrf ",
+                "/v2/**"
         };
 
         // 2，判断此次请求是否需要处理
