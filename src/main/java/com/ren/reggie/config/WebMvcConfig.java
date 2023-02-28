@@ -1,13 +1,18 @@
 package com.ren.reggie.config;
 
+import com.ren.reggie.common.JacksonObjectMapper;
 import com.ren.reggie.interceptor.LoginCheckInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.util.List;
 
 /**
  * @program: reggie_take_out
@@ -61,5 +66,19 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
      //   registry.addInterceptor(loginCheckInterceptor)
      //           .addPathPatterns("/*")
      //           .excludePathPatterns(notLoginInterceptPaths);
+    }
+
+    /**
+     * 扩展mvc框架的消息抓换器
+     * @param converters
+     */
+    @Override
+    protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // 创建一个新的消息转换器对象
+        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
+        // 设置对象转换器，底层使用Jackson将java对象转为json
+        messageConverter.setObjectMapper(new JacksonObjectMapper());
+        //将上面的消息转化器对象追加到mvc框架的转换器中，下标设置为0保证转换器的优先度
+        converters.add(0,messageConverter);
     }
 }

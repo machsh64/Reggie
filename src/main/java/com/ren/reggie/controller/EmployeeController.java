@@ -126,12 +126,12 @@ public class EmployeeController {
         employee.setUpdateUser(empId);
         // 保存到数据库
         LambdaUpdateWrapper<Employee> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(Employee::getUsername,employee.getUsername());
-        employeeService.save(employee);
+        updateWrapper.eq(Employee::getId,employee.getId());
+        employeeService.update(employee,updateWrapper);
 
-        log.info("# 新增员工 员工信息 ： {} #",employee.toString());
+        log.info("# 修改员工 员工信息 ： {} #",employee.toString());
 
-        return R.success("新增员工成功");
+        return R.success("修改员工成功");
     }
 
     @ApiOperation("获取员工列表的分页信息")
