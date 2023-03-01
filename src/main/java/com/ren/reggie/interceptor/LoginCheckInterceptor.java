@@ -1,5 +1,7 @@
 package com.ren.reggie.interceptor;
 
+import com.alibaba.fastjson.JSON;
+import com.ren.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -23,7 +25,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         Object employee = request.getSession().getAttribute("employee");
         if(employee == null) {
             request.setAttribute("msg","请登录后访问");
-            request.getRequestDispatcher("/login.html").forward(request,response);
+            response.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
             return false;
         }
         return true;

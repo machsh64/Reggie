@@ -142,8 +142,10 @@ public class EmployeeController {
     public R<Employee> queryEmp(@PathVariable String id) {
         // 获取用户
         Employee employee = employeeService.getById(id);
-
-        return R.success(employee);
+        if (employee != null) {
+            return R.success(employee);
+        }
+        return R.error("没有查询到对应员工的信息");
     }
 
     @ApiOperation("获取员工列表的分页信息")
