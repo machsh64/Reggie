@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: reggie_take_out
@@ -99,12 +100,12 @@ public class EmployeeController {
         // 设置初始密码123456，需要进行md5加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         // 设置时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        // 设置创建更新人
-        Long empId = (Long) request.getSession().getAttribute("employee");
-        employee.setCreateUser(empId);
-        employee.setUpdateUser(empId);
+    //    employee.setCreateTime(LocalDateTime.now());
+    //    employee.setUpdateTime(LocalDateTime.now());
+    //    // 设置创建更新人
+    //    Long empId = (Long) request.getSession().getAttribute("employee");
+    //    employee.setCreateUser(empId);
+    //    employee.setUpdateUser(empId);
         // 保存到数据库
         employeeService.save(employee);
 
@@ -122,11 +123,19 @@ public class EmployeeController {
     @ApiOperation("修改员工")
     @PutMapping
     public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+        // 由mybatis_plus公共字段自动填充代替
         // 设置时间
-        employee.setUpdateTime(LocalDateTime.now());
+    //    employee.setUpdateTime(LocalDateTime.now());
         // 设置创建更新人
-        Long empId = (Long) request.getSession().getAttribute("employee");
-        employee.setUpdateUser(empId);
+    //    Long empId = (Long) request.getSession().getAttribute("employee");
+    //    employee.setUpdateUser(empId);
+
+        // 通过ThreadLocal 将获取到的 id 存储在单次线程任务内
+
+
+        long id = Thread.currentThread().getId();
+        log.info(" # 线程id 为： {}  # ", id);
+
         // 保存到数据库
         LambdaUpdateWrapper<Employee> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(Employee::getId, employee.getId());
