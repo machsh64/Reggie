@@ -131,10 +131,7 @@ public class EmployeeController {
     //    employee.setUpdateUser(empId);
 
         // 通过ThreadLocal 将获取到的 id 存储在单次线程任务内
-
-
-        long id = Thread.currentThread().getId();
-        log.info(" # 线程id 为： {}  # ", id);
+        // 在MyMetaObjectHandler 中使用基于 ThreadLocal封装的 BaseContext 获取并保存 id
 
         // 保存到数据库
         LambdaUpdateWrapper<Employee> updateWrapper = new LambdaUpdateWrapper<>();
