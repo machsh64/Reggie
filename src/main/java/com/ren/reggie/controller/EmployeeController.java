@@ -136,11 +136,11 @@ public class EmployeeController {
         // 保存到数据库
         LambdaUpdateWrapper<Employee> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(Employee::getId, employee.getId());
-        employeeService.update(employee, updateWrapper);
+        boolean b = employeeService.update(employee, updateWrapper);
 
         log.info("# 修改员工 员工信息 ： {} #", employee.toString());
 
-        return R.success("修改员工成功");
+        return b?R.success("修改员工成功"):R.error("修改员工失败");
     }
 
     @ApiOperation("根据id获取员工信息")

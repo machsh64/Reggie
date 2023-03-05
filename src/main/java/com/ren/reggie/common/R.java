@@ -9,7 +9,6 @@ import java.util.Map;
  * 通用返回结果，服务端，返回结果封装成此对象
  * @param <T>
  */
-@ApiModel("R通用类")
 @Data
 public class R<T> {
 

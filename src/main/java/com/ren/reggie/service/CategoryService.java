@@ -14,4 +14,11 @@ public interface CategoryService extends IService<Category> {
 
     Page<Category> getPage(Integer page, Integer pageSize, String name);
 
+    /**
+     * 根据id删除分类（包含菜品，套餐）
+     * @param id
+     * @return
+     */
+    boolean remove(Long id);
+
 }

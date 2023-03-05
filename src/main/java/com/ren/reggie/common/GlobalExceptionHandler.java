@@ -36,4 +36,15 @@ public class GlobalExceptionHandler {
 
         return R.error("失败了");
     }
+
+    /**
+     * 处理CategoryServiceImpl remove中异常
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(CustomException.class)
+    public R<String> exceptionHandler(CustomException ex) {
+        log.error(ex.getMessage());
+        return R.error(ex.getMessage());
+    }
 }
