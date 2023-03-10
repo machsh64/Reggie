@@ -11,6 +11,9 @@ spring:
       url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: omgd45945.+
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
 mybatis-plus:
   configuration:
@@ -21,6 +24,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
-
 # 因为spring默认不允许直接访问 templates下的文件，所以在部署后应该关闭该映射
 isTestInfo: true
+
+# 用来指定UploadCommon中的本地上传地址
+basePath: D:/RenComp/reggie_take_out/src/main/resources/static/upload/

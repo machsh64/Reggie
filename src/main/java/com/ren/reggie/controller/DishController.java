@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+
 /**
  * @program: reggie_take_out
  * @author: Ren  https://github.com/machsh64
@@ -40,8 +42,8 @@ public class DishController {
 
     @ApiOperation("删除菜品")
     @DeleteMapping
-    public R<String> delete(Long[] ids) {
-        boolean b = dishService.removeById(ids);
+    public R<String> delete(Collection<Long> ids) {
+        boolean b = dishService.removeByIds(ids);
         return b ? R.success("删除菜品成功") : R.error("删除菜品失败");
     }
 
@@ -63,7 +65,7 @@ public class DishController {
 
     @ApiOperation("更改菜品状态")
     @PostMapping("/status/{status}")
-    public R<String> changeStatus(Long[] ids, @PathVariable("status") Integer status) {
+    public R<String> changeStatus(Collection<Long> ids, @PathVariable("status") Integer status) {
         LambdaUpdateWrapper<Dish> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(Dish::getId, ids).set(Dish::getStatus, status);
         boolean b = dishService.update(updateWrapper);
