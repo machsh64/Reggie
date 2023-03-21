@@ -33,24 +33,24 @@ public class CategoryController {
     @Autowired
     private DishService dishService;
 
-    @ApiOperation("添加菜品")
+    @ApiOperation("添加菜品类")
     @PostMapping
     public R<String> save(@RequestBody Category category) {
         boolean b = categoryService.save(category);
-        return b ? R.success("新增菜品成功") : R.error("新增菜品失败");
+        return b ? R.success("新增菜品类成功") : R.error("新增菜品类失败");
     }
 
-    @ApiOperation("修改菜品")
+    @ApiOperation("修改菜品类")
     @PutMapping
     public R<String> update(@RequestBody Category category) {
         LambdaUpdateWrapper<Category> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(Category::getId, category.getId());
         boolean b = categoryService.update(category, updateWrapper);
-        return b ? R.success("修改菜品成功") : R.error("修改菜品失败");
+        return b ? R.success("修改菜品类成功") : R.error("修改菜品类失败");
 
     }
 
-    @ApiOperation("删除菜品")
+    @ApiOperation("删除菜品类")
     @DeleteMapping
     public R<String> delete(Long ids) {
         boolean b = categoryService.remove(ids);
@@ -65,7 +65,7 @@ public class CategoryController {
     }
 
 
-    @ApiOperation("以id获取菜品详情")
+    @ApiOperation("以id获取菜品类详情")
     @GetMapping("/{id}")
     public R<Category> queryCategory(@PathVariable("id") Long id) {
         Category category = categoryService.getById(id);
