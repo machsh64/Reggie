@@ -1,5 +1,6 @@
 package com.ren.reggie.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ren.reggie.common.R;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @program: reggie_take_out
@@ -72,5 +74,13 @@ public class DishController {
         return b ? R.success("菜品状态修改成功") : R.error("菜品状态修改失败");
     }
 
+    @ApiOperation("根据菜品种类获取菜品列表")
+    @GetMapping("/list")
+    public R<List<Dish>> getListByCategoryId(Long categoryId) {
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Dish::getCategoryId, categoryId);
+        List<Dish> dishList = dishService.list(queryWrapper);
+        return R.success(dishList);
+    }
 
 }
