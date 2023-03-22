@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ren.reggie.common.R;
 import com.ren.reggie.entity.Dish;
+import com.ren.reggie.service.CategoryService;
+import com.ren.reggie.service.DishFlavorService;
 import com.ren.reggie.service.DishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +31,8 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    private DishFlavorService dishFlavorService;
 
     @ApiOperation("获取菜品分页")
     @GetMapping("page")
@@ -44,7 +48,7 @@ public class DishController {
 
     @ApiOperation("删除菜品")
     @DeleteMapping
-    public R<String> delete(Collection<Long> ids) {
+    public R<String> delete(@RequestParam("ids") Collection<Long> ids) {
         boolean b = dishService.removeByIds(ids);
         return b ? R.success("删除菜品成功") : R.error("删除菜品失败");
     }
@@ -67,9 +71,9 @@ public class DishController {
 
     @ApiOperation("更改菜品状态")
     @PostMapping("/status/{status}")
-    public R<String> changeStatus(Collection<Long> ids, @PathVariable("status") Integer status) {
+    public R<String> changeStatus(@RequestParam("ids") Collection<Long> ids, @PathVariable("status") Integer status) {
         LambdaUpdateWrapper<Dish> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(Dish::getId, ids).set(Dish::getStatus, status);
+        updateWrapper.in(Dish::getId, ids).set(Dish::getStatus, status);
         boolean b = dishService.update(updateWrapper);
         return b ? R.success("菜品状态修改成功") : R.error("菜品状态修改失败");
     }

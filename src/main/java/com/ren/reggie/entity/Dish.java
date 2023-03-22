@@ -35,7 +35,7 @@ public class Dish implements Serializable {
 
     // 菜品分类名称
     @TableField(exist = false)
-    private Spring categoryName;
+    private String categoryName;
 
     // 菜品价格
     private Double price;
