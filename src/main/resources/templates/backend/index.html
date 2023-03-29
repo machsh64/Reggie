@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>瑞吉外卖管理端</title>
-    <link rel="shortcut icon" href="../../backend/favicon.ico">
+    <link rel="shortcut icon" href="/backend/favicon.ico">
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="../../backend/plugins/element-ui/index.css" />
-    <link rel="stylesheet" href="../../backend/styles/common.css" />
-    <link rel="stylesheet" href="../../backend/styles/index.css" />
-    <link rel="stylesheet" href="../../backend/styles/icon/iconfont.css" />
+    <link rel="stylesheet" href="/backend/plugins/element-ui/index.css" />
+    <link rel="stylesheet" href="/backend/styles/common.css" />
+    <link rel="stylesheet" href="/backend/styles/index.css" />
+    <link rel="stylesheet" href="/backend/styles/icon/iconfont.css" />
     <style>
       .body{
         min-width: 1366px;
@@ -32,7 +32,7 @@
         <div class="sidebar-container">
           <div class="logo">
             <!-- <img src="images/logo.png" width="122.5" alt="" /> -->
-            <img src="../../backend/images/login/login-logo.png" alt="" style="width: 117px; height: 32px" />
+            <img src="/backend/images/login/login-logo.png" alt="" style="width: 117px; height: 32px" />
           </div>
 
           <el-scrollbar wrap-class="scrollbar-wrapper">
@@ -74,14 +74,14 @@
           <div class="navbar">
             <div class="head-lable">
               <span v-if="goBackFlag" class="goBack" @click="goBack()"
-                ><img src="../../backend/images/icons/btn_back@2x.png" alt="" /> 返回</span
+                ><img src="/backend/images/icons/btn_back@2x.png" alt="" /> 返回</span
               >
               <span>{{headTitle}}</span>
             </div>
             <div class="right-menu">
               <div class="avatar-wrapper">{{ userInfo.name }}</div>
               <!-- <div class="logout" @click="logout">退出</div> -->
-              <img src="../../backend/images/icons/btn_close@2x.png" class="outLogin" alt="退出" @click="logout" />
+              <img src="/backend/images/icons/btn_close@2x.png" class="outLogin" alt="退出" @click="logout" />
             </div>
           </div>
           <div class="app-main" v-loading="loading">
@@ -101,13 +101,13 @@
       </div>
     </div>
     <!-- 开发环境版本，包含了有帮助的命令行警告 -->
-    <script src="../../backend/plugins/vue/vue.js"></script>
+    <script src="/backend/plugins/vue/vue.js"></script>
     <!-- 引入组件库 -->
-    <script src="../../backend/plugins/element-ui/index.js"></script>
+    <script src="/backend/plugins/element-ui/index.js"></script>
     <!-- 引入axios -->
-    <script src="../../backend/plugins/axios/axios.min.js"></script>
-    <script src="../../backend/js/request.js"></script>
-    <script src="../../backend/api/login.js"></script>
+    <script src="/backend/plugins/axios/axios.min.js"></script>
+    <script src="/backend/js/request.js"></script>
+    <script src="/backend/api/login.js"></script>
     <script>
 
       new Vue({

@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <!-- 引入样式 -->
-  <link rel="stylesheet" href="../../../../backend/plugins/element-ui/index.css" />
-  <link rel="stylesheet" href="../../../../backend/styles/common.css" />
-  <link rel="stylesheet" href="../../../../backend/styles/page.css" />
+  <link rel="stylesheet" href="/backend/plugins/element-ui/index.css" />
+  <link rel="stylesheet" href="/backend/styles/common.css" />
+  <link rel="stylesheet" href="/backend/styles/page.css" />
 </head>
 <body>
    <div class="dashboard-container" id="food-app">
@@ -60,7 +60,7 @@
             :src="getImage(row.image)" 
             :preview-src-list="[ `/common/download?name=${row.image}` ]" >
             <div slot="error" class="image-slot">
-              <img src="../../../../backend/images/noImg.png" style="width: auto; height: 40px; border:none;" >
+              <img src="/backend/images/noImg.png" style="width: auto; height: 40px; border:none;" >
             </div>  
           </el-image>
           </template>
@@ -130,13 +130,13 @@
     </div>
   </div>
     <!-- 开发环境版本，包含了有帮助的命令行警告 -->
-    <script src="../../../../backend/plugins/vue/vue.js"></script>
+    <script src="/backend/plugins/vue/vue.js"></script>
     <!-- 引入组件库 -->
-    <script src="../../../../backend/plugins/element-ui/index.js"></script>
+    <script src="/backend/plugins/element-ui/index.js"></script>
     <!-- 引入axios -->
-    <script src="../../../../backend/plugins/axios/axios.min.js"></script>
-    <script src="../../../../backend/js/request.js"></script>
-    <script src="../../../../backend/api/food.js"></script>
+    <script src="/backend/plugins/axios/axios.min.js"></script>
+    <script src="/backend/js/request.js"></script>
+    <script src="/backend/api/food.js"></script>
     <script>
       new Vue({
         el: '#food-app',
