@@ -1,8 +1,10 @@
 package com.ren.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ren.reggie.common.R;
 import com.ren.reggie.dto.DishDTO;
 import com.ren.reggie.entity.Category;
 import com.ren.reggie.entity.Dish;
@@ -88,7 +90,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Override
     public boolean saveWithFlavor(DishDTO dishDTO) {
         // 保存菜品的基本信息到菜品表dish
-        this.save(dishDTO);
+        boolean b = this.save(dishDTO);
         Long dishId = dishDTO.getId();  // 菜品id
         List<DishFlavor> flavors = dishDTO.getFlavors();
         // 将flavors中所有口味数据的dishId赋值
@@ -97,7 +99,54 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
             return item;
         }).collect(Collectors.toList());
         // 保存菜品口味数据到菜品口味表dish_flavor
-        boolean b = dishFlavorService.saveBatch(flavors);
-        return b;
+        boolean c = dishFlavorService.saveBatch(flavors);
+        return b&&c;
+    }
+
+    /**
+     * 更新菜品详情与口味
+     * @param dishDTO
+     * @return
+     */
+    @Transactional
+    @Override
+    public boolean updateWithFlavor(DishDTO dishDTO) {
+        // 修改菜品普通属性
+        boolean b = this.updateById(dishDTO);
+        // 修改菜品口味属性
+        // --清理当前菜品对应口味数据--dish_flavor表的delete操作
+        LambdaUpdateWrapper<DishFlavor> flavorLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        flavorLambdaUpdateWrapper.eq(DishFlavor::getDishId,dishDTO.getId());
+        dishFlavorService.remove(flavorLambdaUpdateWrapper);
+        // --添加当前提交过来的口味数据--dish_flavor表的insert操作
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        // ----将flavors中所有口味数据的dishId赋值
+        flavors = flavors.stream().map((item) -> {
+            item.setDishId(dishDTO.getId());
+            return item;
+        }).collect(Collectors.toList());
+        boolean c = dishFlavorService.saveBatch(flavors);
+        return b&&c;
+    }
+
+    /**
+     * 根据id获取菜品详情, 口味, 分类名称
+     * @param id
+     * @return
+     */
+    @Override
+    public DishDTO getDTOById(Long id) {
+        // 获取dish
+        Dish dish = this.getById(id);
+        DishDTO dishDTO = new DishDTO();
+        // 将dish属性copy到dishDTO中
+        BeanUtils.copyProperties(dish, dishDTO);
+        // 设置dishDTO的flavors属性
+        LambdaQueryWrapper<DishFlavor> flavorLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        flavorLambdaQueryWrapper.eq(DishFlavor::getDishId,id);
+        dishDTO.setFlavors(dishFlavorService.list(flavorLambdaQueryWrapper));
+        // 设置dishDTO的categoryName属性
+        dishDTO.setCategoryName(categoryMapper.selectById(dish.getCategoryId()).getName());
+        return dishDTO;
     }
 }

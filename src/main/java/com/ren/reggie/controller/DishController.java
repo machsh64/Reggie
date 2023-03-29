@@ -43,8 +43,8 @@ public class DishController {
 
     @ApiOperation("获取菜品详情")
     @GetMapping("/{id}")
-    public R<Dish> queryById(@PathVariable("id") Long id) {
-        return R.success(dishService.getById(id));
+    public R<DishDTO> queryById(@PathVariable("id") Long id) {
+        return R.success(dishService.getDTOById(id));
     }
 
     @ApiOperation("删除菜品")
@@ -63,11 +63,9 @@ public class DishController {
 
     @ApiOperation("修改菜品")
     @PutMapping
-    public R<String> update(@RequestBody Dish dish) {
-        LambdaUpdateWrapper<Dish> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(Dish::getId, dish.getId());
-        boolean b = dishService.update(dish, updateWrapper);
-        return b ? R.success("修改菜品成功") : R.error("修改菜品失败");
+    public R<String> update(@RequestBody DishDTO dishDTO) {
+        boolean b = dishService.updateWithFlavor(dishDTO);
+        return b ? R.success("菜品修改成功") : R.error("菜品修改失败");
     }
 
     @ApiOperation("更改菜品状态")
