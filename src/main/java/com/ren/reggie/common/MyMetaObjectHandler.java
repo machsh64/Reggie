@@ -33,7 +33,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         metaObject.setValue("createUser", BaseContext.getCurrentId());
         metaObject.setValue("updateUser", BaseContext.getCurrentId());
         // 清空线程中保存的值
-        BaseContext.removeThread();
+        //BaseContext.removeThread();
     }
 
     /**
@@ -50,7 +50,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         // 获取保存在线程中的用户id
         metaObject.setValue("updateUser", BaseContext.getCurrentId());
         // 清空线程中保存的信息
-        BaseContext.removeThread();
+        //BaseContext.removeThread();
     }
 
 }

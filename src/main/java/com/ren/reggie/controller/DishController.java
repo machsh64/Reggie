@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ren.reggie.common.R;
+import com.ren.reggie.dto.DishDTO;
 import com.ren.reggie.entity.Dish;
 import com.ren.reggie.service.CategoryService;
 import com.ren.reggie.service.DishFlavorService;
@@ -36,7 +37,7 @@ public class DishController {
 
     @ApiOperation("获取菜品分页")
     @GetMapping("page")
-    public R<Page<Dish>> query(Integer page, Integer pageSize, String name) {
+    public R<Page<DishDTO>> query(Integer page, Integer pageSize, String name) {
         return R.success(dishService.getPage(page, pageSize, name));
     }
 
@@ -55,8 +56,8 @@ public class DishController {
 
     @ApiOperation("新增菜品")
     @PostMapping
-    public R<String> insert(@RequestBody Dish dish) {
-        boolean b = dishService.save(dish);
+    public R<String> save(@RequestBody DishDTO dishDTO) {
+        boolean b = dishService.saveWithFlavor(dishDTO);
         return b ? R.success("新增菜品成功") : R.error("新增菜品失败");
     }
 
