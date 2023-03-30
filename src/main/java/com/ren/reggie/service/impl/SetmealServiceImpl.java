@@ -1,6 +1,7 @@
 package com.ren.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ren.reggie.dto.SetmealDTO;
@@ -13,9 +14,9 @@ import com.ren.reggie.service.SetmealService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,6 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> implements SetmealService {
-
-    @Autowired
-    private SetmealMapper setmealMapper;
 
     @Autowired
     private CategoryMapper categoryMapper;
@@ -97,5 +95,49 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         setmealDTO.setSetmealDishes(setmealDishList);
         // 将setmealDTO返回
         return setmealDTO;
+    }
+
+    /**
+     * 新增套餐 其中需要添加套餐关联的菜品与每个菜品的setmealId
+     * @param setmealDTO
+     * @return
+     */
+    @Transactional
+    @Override
+    public boolean saveSetmealDTO(SetmealDTO setmealDTO) {
+        // 保存基本的套餐信息
+        boolean b = this.save(setmealDTO);
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        setmealDishes = setmealDishes.stream().map(item -> {
+            item.setSetmealId(setmealDTO.getId());
+            return item;
+        }).collect(Collectors.toList());
+        boolean c = setmealDishService.saveBatch(setmealDishes);
+        return b&&c;
+    }
+
+    /**
+     * 修改套餐, 其中需要修改套餐中的Dishes
+     * @param setmealDTO
+     * @return
+     */
+    @Transactional
+    @Override
+    public boolean updateSetmealDTO(SetmealDTO setmealDTO) {
+        // 更新套餐中的普通字段
+        boolean b = this.updateById(setmealDTO);
+        // 清除套餐中的菜品
+        LambdaUpdateWrapper<SetmealDish> setmealDishLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        setmealDishLambdaUpdateWrapper.eq(SetmealDish::getSetmealId,setmealDTO.getId());
+        setmealDishService.remove(setmealDishLambdaUpdateWrapper);
+        // 为setmealDTO中的setmealDishes的setmealId赋值
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        setmealDishes = setmealDishes.stream().map(item -> {
+            item.setSetmealId(setmealDTO.getId());
+            return item;
+        }).collect(Collectors.toList());
+        // 新镇套餐中的菜品
+        boolean c = setmealDishService.saveBatch(setmealDishes);
+        return b&&c;
     }
 }

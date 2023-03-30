@@ -58,4 +58,18 @@ public class SetmealController {
         return b ? R.success("套餐状态修改成功") : R.error("套餐状态修改失败");
     }
 
+    @ApiOperation("新增套餐")
+    @PostMapping
+    public R<String> save(@RequestBody SetmealDTO setmealDTO) {
+        boolean b = setmealService.saveSetmealDTO(setmealDTO);
+        return b ? R.success("新增套餐成功") : R.error("新增套餐失败");
+    }
+
+    @ApiOperation("修改套餐信息")
+    @PutMapping
+    public R<String> update(@RequestBody SetmealDTO setmealDTO) {
+        boolean b = setmealService.updateSetmealDTO(setmealDTO);
+        return b ? R.success("修改套餐成功") : R.error("修改套餐失败");
+    }
+
 }

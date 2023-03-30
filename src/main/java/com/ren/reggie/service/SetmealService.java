@@ -17,4 +17,8 @@ public interface SetmealService extends IService<Setmeal> {
 
     SetmealDTO getDetailById(Long id);
 
+    boolean saveSetmealDTO(SetmealDTO setmealDTO);
+
+    boolean updateSetmealDTO(SetmealDTO setmealDTO);
+
 }
