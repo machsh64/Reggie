@@ -37,9 +37,9 @@ public class SetmealController {
 
     @ApiOperation("根据id获取套餐分页详情")
     @GetMapping("/{id}")
-    public R<Setmeal> queryById(@PathVariable("id") Long id) {
-        Setmeal setmeal = setmealService.getById(id);
-        return R.success(setmeal);
+    public R<SetmealDTO> queryById(@PathVariable("id") Long id) {
+        SetmealDTO setmealDTO = setmealService.getDetailById(id);
+        return R.success(setmealDTO);
     }
 
     @ApiOperation("根据ids进行删除套餐")

@@ -5,14 +5,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ren.reggie.dto.SetmealDTO;
 import com.ren.reggie.entity.Setmeal;
+import com.ren.reggie.entity.SetmealDish;
 import com.ren.reggie.mapper.CategoryMapper;
 import com.ren.reggie.mapper.SetmealMapper;
+import com.ren.reggie.service.SetmealDishService;
 import com.ren.reggie.service.SetmealService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,9 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private SetmealDishService setmealDishService;
 
     /**
      * 获取菜单分页集合
@@ -67,5 +73,29 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         // 将list分给setmealDTOPage的records
         setmealDTOPage.setRecords(list);
         return setmealDTOPage;
+    }
+
+    /**
+     * 根据id获取套餐 以及套餐内的setmealDishes与categoryName
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealDTO getDetailById(Long id) {
+        Setmeal setmeal = this.getById(id);
+        SetmealDTO setmealDTO = new SetmealDTO();
+        // 将setmeal中的普通属性赋值给setmealDTO
+        BeanUtils.copyProperties(setmeal,setmealDTO);
+        // 将setmealDTO中的categoryName赋值
+        setmealDTO.setCategoryName(categoryMapper.selectById(setmeal.getCategoryId()).getName());
+        // 将setmealDTO中的setmealDishes赋值
+        // --设置条件构造器 条件为 setmealDish表中的setmealId = id
+        LambdaQueryWrapper<SetmealDish> setmealDishLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        setmealDishLambdaQueryWrapper.eq(SetmealDish::getSetmealId,id);
+        List<SetmealDish> setmealDishList = setmealDishService.list(setmealDishLambdaQueryWrapper);
+        // -- 将获取到的setmealDishesList赋值给setmealDTO中的setmealDishes(List)属性
+        setmealDTO.setSetmealDishes(setmealDishList);
+        // 将setmealDTO返回
+        return setmealDTO;
     }
 }

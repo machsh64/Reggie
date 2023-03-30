@@ -15,4 +15,6 @@ public interface SetmealService extends IService<Setmeal> {
 
     Page<SetmealDTO> getPage(Integer page, Integer pageSize, String name);
 
+    SetmealDTO getDetailById(Long id);
+
 }
