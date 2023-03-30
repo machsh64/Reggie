@@ -95,7 +95,6 @@
         <el-form-item label="口味做法配置:">
           <el-form-item>
             <div class="flavorBox">
-              <!-- 此处的dishFlavors.length无法获取到，导致无法判断是否是新增菜品或者修改菜品  初步判断原因为 在进入修改详情页面时，未获取到菜品的详情，或者菜品的详情未进行到赋值 -->
               <span
                 v-if="dishFlavors.length == 0"
                 class="addBut"

@@ -2,6 +2,7 @@ package com.ren.reggie.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ren.reggie.dto.SetmealDTO;
 import com.ren.reggie.entity.Setmeal;
 
 /**
@@ -12,6 +13,6 @@ import com.ren.reggie.entity.Setmeal;
  **/
 public interface SetmealService extends IService<Setmeal> {
 
-    Page<Setmeal> getPage(Integer page, Integer pageSize, String name);
+    Page<SetmealDTO> getPage(Integer page, Integer pageSize, String name);
 
 }

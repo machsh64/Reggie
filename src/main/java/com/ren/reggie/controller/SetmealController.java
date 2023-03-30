@@ -3,6 +3,7 @@ package com.ren.reggie.controller;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ren.reggie.common.R;
+import com.ren.reggie.dto.SetmealDTO;
 import com.ren.reggie.entity.Setmeal;
 import com.ren.reggie.service.SetmealService;
 import io.swagger.annotations.Api;
@@ -30,7 +31,7 @@ public class SetmealController {
 
     @ApiOperation("获取套餐分页信息")
     @GetMapping("/page")
-    public R<Page<Setmeal>> query(Integer page, Integer pageSize, String name) {
+    public R<Page<SetmealDTO>> query(Integer page, Integer pageSize, String name) {
         return R.success(setmealService.getPage(page, pageSize, name));
     }
 
