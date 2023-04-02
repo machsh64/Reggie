@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ren.reggie.common.R;
+import com.ren.reggie.common.UploadCommon;
 import com.ren.reggie.dto.DishDTO;
 import com.ren.reggie.entity.Category;
 import com.ren.reggie.entity.Dish;
@@ -16,10 +17,12 @@ import com.ren.reggie.service.DishFlavorService;
 import com.ren.reggie.service.DishService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Value("${basePath}")
+    String basePath;
 
     /**
      * 获取菜单分页集合
@@ -148,5 +154,28 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         // 设置dishDTO的categoryName属性
         dishDTO.setCategoryName(categoryMapper.selectById(dish.getCategoryId()).getName());
         return dishDTO;
+    }
+
+    /**
+     * 根据ids删除菜品, 与菜品对应的图片, 与菜品对应的口味数据
+     * @param ids
+     * @return
+     */
+    @Transactional
+    @Override
+    public boolean deleteDTOByIds(Collection<Long> ids) {
+
+        for (Long id : ids) {
+            // 删除与菜品对应的图片
+            DishDTO dishDTO = this.getDTOById(id);
+            UploadCommon.removePicWithName(basePath,dishDTO.getImage());
+            // 删除与菜品对应的口味数据
+            LambdaUpdateWrapper<DishFlavor> dishFlavorLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            dishFlavorLambdaUpdateWrapper.eq(DishFlavor::getDishId,id);
+            dishFlavorService.remove(dishFlavorLambdaUpdateWrapper);
+        }
+        // 删除菜品的基本数据
+        boolean b = this.removeByIds(ids);
+        return b;
     }
 }

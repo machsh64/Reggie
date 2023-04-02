@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ren.reggie.common.R;
+import com.ren.reggie.common.UploadCommon;
 import com.ren.reggie.dto.DishDTO;
 import com.ren.reggie.entity.Dish;
 import com.ren.reggie.service.CategoryService;
@@ -50,7 +51,7 @@ public class DishController {
     @ApiOperation("删除菜品")
     @DeleteMapping
     public R<String> delete(@RequestParam("ids") Collection<Long> ids) {
-        boolean b = dishService.removeByIds(ids);
+        boolean b = dishService.deleteDTOByIds(ids);
         return b ? R.success("删除菜品成功") : R.error("删除菜品失败");
     }
 

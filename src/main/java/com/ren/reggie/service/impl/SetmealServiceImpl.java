@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ren.reggie.common.UploadCommon;
 import com.ren.reggie.dto.SetmealDTO;
 import com.ren.reggie.entity.Setmeal;
 import com.ren.reggie.entity.SetmealDish;
@@ -13,10 +14,13 @@ import com.ren.reggie.service.SetmealDishService;
 import com.ren.reggie.service.SetmealService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +38,9 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     @Autowired
     private SetmealDishService setmealDishService;
+
+    @Value("${basePath}")
+    String basePath;
 
     /**
      * 获取菜单分页集合
@@ -139,5 +146,26 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         // 新镇套餐中的菜品
         boolean c = setmealDishService.saveBatch(setmealDishes);
         return b&&c;
+    }
+
+    /**
+     * 根据id集合删除套餐, 并删除套餐中的Dishes
+     * @param ids
+     * @return
+     */
+    @Transactional
+    @Override
+    public boolean deleteSetmealDTO(Collection<Long> ids) {
+        // 删除缓存的图片
+        for (Long id : ids) {
+            UploadCommon.removePicWithName(basePath, this.getById(id).getImage());
+            // 删除套餐中的菜品
+            LambdaUpdateWrapper<SetmealDish> setmealDishLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            setmealDishLambdaUpdateWrapper.eq(SetmealDish::getSetmealId,id);
+            setmealDishService.remove(setmealDishLambdaUpdateWrapper);
+        }
+        // 删除套餐基本信息
+        boolean b = this.removeByIds(ids);
+        return b;
     }
 }

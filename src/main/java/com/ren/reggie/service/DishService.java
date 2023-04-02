@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ren.reggie.dto.DishDTO;
 import com.ren.reggie.entity.Dish;
 
+import java.util.Collection;
+
 /**
  * @program: reggie_take_out
  * @author: Ren  https://github.com/machsh64
@@ -41,4 +43,11 @@ public interface DishService extends IService<Dish> {
      * @return
      */
     DishDTO getDTOById(Long id);
+
+    /**
+     * 根据ids删除菜品与之对应的图片
+     * @param ids
+     * @return
+     */
+    boolean deleteDTOByIds(Collection<Long> ids);
 }

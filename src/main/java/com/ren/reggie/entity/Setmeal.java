@@ -59,6 +59,6 @@ public class Setmeal implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
 
-    @TableLogic
+
     private Integer isDeleted;
 }

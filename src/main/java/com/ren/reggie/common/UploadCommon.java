@@ -1,10 +1,14 @@
 package com.ren.reggie.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -42,6 +46,17 @@ public class UploadCommon {
         }
         file.transferTo(new File(basePath + notRepeatName));
         return notRepeatName;
+    }
+
+    public static boolean removePicWithName(String basePath, String picName) {
+        Path path = Paths.get(basePath + picName);
+        boolean b = false;
+        try {
+            b = Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return b;
     }
 
     /**

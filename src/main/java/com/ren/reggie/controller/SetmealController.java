@@ -45,7 +45,7 @@ public class SetmealController {
     @ApiOperation("根据ids进行删除套餐")
     @DeleteMapping
     public R<String> deleteByIds(@RequestParam("ids") Collection<Long> ids) {
-        boolean b = setmealService.removeByIds(ids);
+        boolean b = setmealService.deleteSetmealDTO(ids);
         return b ? R.success("删除套餐成功") : R.error("删除套餐失败");
     }
 
